@@ -6,5 +6,13 @@
         string? PersonName,
         string? Gender,
         string? Token,
-        bool Success);
+        bool Success)
+    {
+        // Parameterless constructor
+        public AuthenticationResponse() : this(default, default, default,
+            default, default, default)
+        {
+
+        }
+    }
 }
