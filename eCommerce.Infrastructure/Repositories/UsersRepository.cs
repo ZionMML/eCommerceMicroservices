@@ -36,13 +36,16 @@ namespace eCommerce.Infrastructure.Repositories
         }
         public async Task<ApplicationUser?> GetUserByEmailAndPassword(string? email, string? password)
         {
-            return new ApplicationUser() {
-                UserID = Guid.NewGuid(),
-                Email = email, 
-                Password = password,
-                PersonName = "Person name",
-                Gender = GenderOptions.Male.ToString()
-            };
+            var Parameters = new { Email = email, Password = password };
+
+            // SQL query to select a user by Email and Password
+            string query = "SELECT * FROM public.\"Users\"" +
+                " WHERE \"Email\"=@Email AND \"Password\"=@Password";
+            
+            ApplicationUser? user = await
+            _dbContext.DbConnection.QueryFirstOrDefaultAsync<ApplicationUser>(query, Parameters);
+
+            return user;
         }
     }
 }
