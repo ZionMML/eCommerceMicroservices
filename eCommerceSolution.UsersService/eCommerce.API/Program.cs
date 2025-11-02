@@ -24,6 +24,18 @@ builder.Services.AddAutoMapper(typeof(AppUserMappingProfile).Assembly,
 // Fluent Validation
 builder.Services.AddFluentValidationAutoValidation();
 
+//Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularClient",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200") // Angular dev server
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 // Build the web application
 var app = builder.Build();
 
@@ -31,6 +43,9 @@ app.UseExceptionHandlingMiddleware();
 
 // Routing
 app.UseRouting();
+
+// Use CORS
+app.UseCors("AllowAngularClient");
 
 // Auth
 app.UseAuthentication();
