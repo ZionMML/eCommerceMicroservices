@@ -18,14 +18,16 @@ public interface IProductsRepository
     /// </summary>
     /// <param name="conditionExpression">The condition to filter products</param>
     /// <returns>Returning a collection of matching products</returns>
-    Task<IEnumerable<Product?>> GetProductsByCondition(Expression<Func<Product, bool>> conditionExpression);
+    Task<IEnumerable<Product?>> GetProductsByCondition
+        (Expression<Func<Product, bool>> conditionExpression);
 
     /// <summary>
     /// Retrieves a single product based on the specified condition asynchronously.
     /// </summary>
     /// <param name="conditionExpression">The condition to filter the product</param>
     /// <returns>Returns a single product or null if not found</returns>
-    Task<Product?> GetProductByCondition(Expression<Func<Product, bool>> conditionExpression);
+    Task<Product?> GetProductByCondition
+        (Expression<Func<Product, bool>> conditionExpression);
 
     /// <summary>
     /// Adds a new product into the products table asynchronously.
@@ -47,5 +49,5 @@ public interface IProductsRepository
     /// <param name="productID">The product ID to be deleted</param>
     /// <returns>Returns true if the deletion is successful, false otherwise.</returns>
     Task<bool> DeleteProduct(Guid productID);
-}
+ }
 

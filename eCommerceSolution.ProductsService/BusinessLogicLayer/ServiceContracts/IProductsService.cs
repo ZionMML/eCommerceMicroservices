@@ -20,7 +20,7 @@ public interface IProductsService
     /// </param>
     /// <returns>Returns matching products</returns>
     Task<List<ProductResponse?>> GetProductsByCondition(
-        Expression<Func<ProductResponse, bool>> conditionExpression);
+        Expression<Func<Product, bool>> conditionExpression);
 
     /// <summary>
     /// Returns a single product matching with given condition
@@ -29,7 +29,7 @@ public interface IProductsService
     /// condition to check
     /// <returns>Returns matching product or null</returns>
     Task<ProductResponse?> GetProductByCondition(
-        Expression<Func<ProductResponse, bool>> conditionExpression);
+        Expression<Func<Product, bool>> conditionExpression);
 
     /// <summary>
     /// Adds (inserts) product into the table using 
@@ -43,7 +43,7 @@ public interface IProductsService
     /// </summary>
     /// <param name="productUpdateRequest"></param>
     /// <returns>Returns product object after suuessful update; otherwise null</returns>
-    Task<ProductResponse?> UpdateProduct( ProductUpdateRequest productUpdateRequest);
+    Task<ProductResponse?> UpdateProduct(ProductUpdateRequest productUpdateRequest);
 
 
     /// <summary>
@@ -51,7 +51,7 @@ public interface IProductsService
     /// </summary>
     /// <param name="productId">ProductID to search and delete</param>
     /// <returns>Returns true if the deletion is successful; </returns>
-    Task<bool> DeleteProduct(int productId);
+    Task<bool> DeleteProduct(Guid productId);
 
 }
 

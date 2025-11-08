@@ -23,7 +23,9 @@ public class ProductRepository : IProductsRepository
 
     public async Task<bool> DeleteProduct(Guid productID)
     {
-        Product? existingProduct = await _dbContext.Products.FirstOrDefaultAsync(temp => temp.ProductID == productID);
+        Product? existingProduct = await _dbContext.Products.FirstOrDefaultAsync
+            (temp => temp.ProductID == productID);
+
         if (existingProduct == null)
         {
             return false;
@@ -45,7 +47,8 @@ public class ProductRepository : IProductsRepository
       return await _dbContext.Products.ToListAsync();
     }
 
-    public async Task<IEnumerable<Product?>> GetProductsByCondition(Expression<Func<Product, bool>> conditionExpression)
+    public async Task<IEnumerable<Product?>> GetProductsByCondition
+        (Expression<Func<Product, bool>> conditionExpression)
     {
         return await _dbContext.Products.Where(conditionExpression).ToListAsync();
 
