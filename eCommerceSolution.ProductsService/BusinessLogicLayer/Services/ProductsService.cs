@@ -4,10 +4,9 @@ using eCommerce.BusinessLogicLayer.ServiceContracts;
 using eCommerce.DataAccessLayer.Entities;
 using eCommerce.DataAccessLayer.RepositoryContracts;
 using FluentValidation;
-using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
-namespace BusinessLogicLayer.Services;
+namespace eCommerce.BusinessLogicLayer.Services;
 
 internal class ProductsService : IProductsService
 {
