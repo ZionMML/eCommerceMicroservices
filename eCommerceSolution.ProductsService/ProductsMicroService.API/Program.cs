@@ -23,12 +23,38 @@ builder.Services.ConfigureHttpJsonOptions(options =>
      .JsonStringEnumConverter());
 });
 
+// Add Swagger services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("https://localhost:7047")
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 app.UseExceptionHandlingMiddleware();
 app.UseRouting();
 
+// CORS
+app.UseCors();
+
+// Swagger
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+    app.UseSwaggerUI();
+//}
+
 // Auth
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
