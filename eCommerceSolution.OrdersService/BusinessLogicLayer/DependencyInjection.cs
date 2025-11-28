@@ -1,4 +1,5 @@
 ﻿using eCommerce.OrdersService.BusinessLogicLayer.DTO;
+using eCommerce.OrdersService.BusinessLogicLayer.Mappers;
 using eCommerce.OrdersService.BusinessLogicLayer.Validators;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,8 @@ public static class DependencyInjection
     {
         // TO DO: Add business logic layer services into the IoC container
         services.AddValidatorsFromAssemblyContaining<OrderAddRequestValidator>();
+
+        services.AddAutoMapper(typeof(OrderAddRequestToOrderMappingProfile).Assembly);
 
         return services;
     }
