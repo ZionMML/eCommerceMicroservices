@@ -1,4 +1,4 @@
-﻿namespace eCommerce.OrdersService.BusinessLogicLayer.DTO;
+﻿namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.DTO;
 
 public record OrderItemAddRequest(Guid ProductID, decimal UnitPrice, int Quantity)  
 {

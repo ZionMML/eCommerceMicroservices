@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace eCommerce.OrdersService.DataAccessLayer.Entities;
+namespace eCommerce.OrdersMicroservice.DataAccessLayer.Entities;
 
     public class Order
     {

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using eCommerce.OrdersService.BusinessLogicLayer.DTO;
-using eCommerce.OrdersService.DataAccessLayer.Entities;
+using eCommerce.OrdersMicroservice.BusinessLogicLayer.DTO;
+using eCommerce.OrdersMicroservice.DataAccessLayer.Entities;
 
-namespace eCommerce.OrdersService.BusinessLogicLayer.Mappers;
+namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.Mappers;
 
 internal class OrderItemAddRequestToOrderItemMappingProfile : Profile
 {

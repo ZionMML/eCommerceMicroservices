@@ -1,8 +1,8 @@
-﻿using eCommerce.OrdersService.DataAccessLayer.Entities;
-using eCommerce.OrdersService.DataAccessLayer.RepositoryContracts;
+﻿using eCommerce.OrdersMicroservice.DataAccessLayer.Entities;
+using eCommerce.OrdersMicroservice.DataAccessLayer.RepositoryContracts;
 using MongoDB.Driver;
 
-namespace eCommerce.OrdersService.DataAccessLayer.Repositories;
+namespace eCommerce.OrdersMicroservice.DataAccessLayer.Repositories;
 
 public class OrdersRepository : IOrdersRepository
 {

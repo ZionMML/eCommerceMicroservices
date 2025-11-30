@@ -1,11 +1,13 @@
-﻿using eCommerce.OrdersService.BusinessLogicLayer.DTO;
-using eCommerce.OrdersService.BusinessLogicLayer.Mappers;
-using eCommerce.OrdersService.BusinessLogicLayer.Validators;
+﻿using eCommerce.OrdersMicroservice.BusinessLogicLayer.DTO;
+using eCommerce.OrdersMicroservice.BusinessLogicLayer.Mappers;
+using eCommerce.OrdersMicroservice.BusinessLogicLayer.ServiceContracts;
+using eCommerce.OrdersMicroservice.BusinessLogicLayer.Services;
+using eCommerce.OrdersMicroservice.BusinessLogicLayer.Validators;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace eCommerce.OrdersService.BusinessLogicLayer;
+namespace eCommerce.OrdersMicroservice.BusinessLogicLayer;
 
 public static class DependencyInjection
 {
@@ -16,6 +18,8 @@ public static class DependencyInjection
         services.AddValidatorsFromAssemblyContaining<OrderAddRequestValidator>();
 
         services.AddAutoMapper(typeof(OrderAddRequestToOrderMappingProfile).Assembly);
+
+        services.AddScoped<IOrdersService, OrdersService>();
 
         return services;
     }

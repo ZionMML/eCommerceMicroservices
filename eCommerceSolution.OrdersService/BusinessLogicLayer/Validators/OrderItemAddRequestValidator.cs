@@ -1,7 +1,7 @@
-﻿using eCommerce.OrdersService.BusinessLogicLayer.DTO;
+﻿using eCommerce.OrdersMicroservice.BusinessLogicLayer.DTO;
 using FluentValidation;
 
-namespace eCommerce.OrdersService.BusinessLogicLayer.Validators;
+namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.Validators;
 
 public class OrderItemAddRequestValidator : AbstractValidator<OrderItemAddRequest>
 {

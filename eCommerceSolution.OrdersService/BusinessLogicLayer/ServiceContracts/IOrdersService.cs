@@ -1,8 +1,8 @@
-﻿using eCommerce.OrdersService.BusinessLogicLayer.DTO;
-using eCommerce.OrdersService.DataAccessLayer.Entities;
+﻿using eCommerce.OrdersMicroservice.BusinessLogicLayer.DTO;
+using eCommerce.OrdersMicroservice.DataAccessLayer.Entities;
 using MongoDB.Driver;
 
-namespace eCommerce.OrdersService.BusinessLogicLayer.ServiceContracts;
+namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.ServiceContracts;
 
 public interface IOrdersService
 {

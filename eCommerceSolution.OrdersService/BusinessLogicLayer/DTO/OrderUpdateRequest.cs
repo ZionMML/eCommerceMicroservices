@@ -1,4 +1,4 @@
-﻿namespace eCommerce.OrdersService.BusinessLogicLayer.DTO;
+﻿namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.DTO;
 
 public record OrderUpdateRequest(Guid OrderID, Guid UserID,
 DateTime OrderDate, List<OrderItemUpdateRequest> OrderItems)
