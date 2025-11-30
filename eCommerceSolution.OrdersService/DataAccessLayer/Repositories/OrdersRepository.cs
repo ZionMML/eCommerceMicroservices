@@ -28,6 +28,12 @@ public class OrdersRepository : IOrdersRepository
     public async Task<Order?> AddOrder(Order order)
     {
         order.OrderID = Guid.NewGuid();
+        order._id = order.OrderID;
+
+        foreach (var item in order.OrderItems)
+        {
+            item._id = Guid.NewGuid();
+        }
 
         await _ordersCollection.InsertOneAsync(order);
         return order;
@@ -35,6 +41,15 @@ public class OrdersRepository : IOrdersRepository
     public async Task<Order?> UpdateOrder(Order order)
     {
         var filter = Builders<Order>.Filter.Eq(o => o.OrderID, order.OrderID);
+
+        Order? existingOrder = await GetOrderByCondition(filter);
+        if (existingOrder == null)
+        {
+            return null; // Order not found
+        }
+
+        order._id = existingOrder._id;
+
         var result = await _ordersCollection.ReplaceOneAsync(filter, order);
         return result.ModifiedCount > 0 ? order : null;
     }
