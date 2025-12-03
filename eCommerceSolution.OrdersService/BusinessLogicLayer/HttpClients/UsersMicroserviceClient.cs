@@ -7,7 +7,7 @@ public class UsersMicroserviceClient(HttpClient httpClient)
 {
     private readonly HttpClient _httpClient = httpClient;
 
-    public async Task<UserDTO?> GetUserByIDAsync(Guid userID)
+    public async Task<UserDTO?> GetUserByUserID(Guid userID)
     {
         var response = await _httpClient.GetAsync($"/api/users/{userID}");
 

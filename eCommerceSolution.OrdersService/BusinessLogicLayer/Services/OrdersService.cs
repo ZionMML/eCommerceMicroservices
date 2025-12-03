@@ -3,6 +3,8 @@ using eCommerce.OrdersMicroservice.BusinessLogicLayer.DTO;
 using eCommerce.OrdersMicroservice.BusinessLogicLayer.ServiceContracts;
 using eCommerce.OrdersMicroservice.DataAccessLayer.Entities;
 using eCommerce.OrdersMicroservice.DataAccessLayer.RepositoryContracts;
+using eCommerce.UsersMicroservice.BusinessLogicLayer.DTOs;
+using eCommerce.UsersMicroservice.BusinessLogicLayer.HttpClients;
 using FluentValidation;
 using FluentValidation.Results;
 using MongoDB.Driver;
@@ -13,7 +15,8 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
     IValidator<OrderAddRequest> orderAddRequestValidator,
     IValidator<OrderItemAddRequest> orderItemAddRequestValidator,
     IValidator<OrderUpdateRequest> orderUpdateRequestValidator,
-    IValidator<OrderItemUpdateRequest> orderItemUpdateRequestValidator
+    IValidator<OrderItemUpdateRequest> orderItemUpdateRequestValidator,
+    UsersMicroserviceClient usersMicroserviceClient
         ) : IOrdersService
 {
     private readonly IOrdersRepository _ordersRepository = ordersRepository;
@@ -22,7 +25,7 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
     private readonly IValidator<OrderItemAddRequest> _orderItemAddRequestValidator = orderItemAddRequestValidator;
     private readonly IValidator<OrderUpdateRequest> _orderUpdateRequestValidator = orderUpdateRequestValidator;
     private readonly IValidator<OrderItemUpdateRequest> _orderItemUpdateRequestValidator = orderItemUpdateRequestValidator;
-
+    private readonly UsersMicroserviceClient _usersMicroserviceClient = usersMicroserviceClient;
     public async Task<OrderResponse?> AddOrder(OrderAddRequest orderAddRequest)
     {
         ArgumentNullException.ThrowIfNull(orderAddRequest);
@@ -51,6 +54,13 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
         }
 
         // TO DO: Add logic for checking if UserID exists in Users microservice
+        UserDTO? user = await
+            _usersMicroserviceClient.GetUserByUserID(orderAddRequest.UserID);
+
+        if (user == null)
+        {
+            throw new ArgumentException($"User with ID {orderAddRequest.UserID} does not exist.");
+        }
 
         Order order = _mapper.Map<Order>(orderAddRequest);
 
@@ -113,7 +123,7 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
         {
             return null;
         }
-        IEnumerable<OrderResponse?> orderResponses = 
+        IEnumerable<OrderResponse?> orderResponses =
             _mapper.Map<IEnumerable<OrderResponse>>(orders);
         return (List<OrderResponse?>)orderResponses;
     }
@@ -161,6 +171,13 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
         }
 
         // TO DO: Add logic for checking if UserID exists in Users microservice
+        UserDTO? user = await
+            _usersMicroserviceClient.GetUserByUserID(orderUpdateRequest.UserID);
+
+        if (user == null)
+        {
+            throw new ArgumentException($"User with ID {orderUpdateRequest.UserID} does not exist.");
+        }
 
         Order order = _mapper.Map<Order>(orderUpdateRequest);
 

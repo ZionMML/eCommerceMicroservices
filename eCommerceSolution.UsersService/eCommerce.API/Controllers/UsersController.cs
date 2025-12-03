@@ -11,7 +11,7 @@ namespace eCommerce.API.Controllers
         private readonly IUsersService _usersService = usersService;
 
         // GET /api/Users/{userID}
-        [HttpGet("userID")]
+        [HttpGet("{userId:guid}")]
         public async Task<IActionResult> GetUserByUserID(Guid userId)
         {
             if (userId == Guid.Empty)
