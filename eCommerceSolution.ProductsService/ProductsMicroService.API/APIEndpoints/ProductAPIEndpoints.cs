@@ -24,6 +24,9 @@ public static class ProductAPIEndpoints
             productService.GetProductByCondition(temp
                 => temp.ProductID == ProductId);
 
+            if(product == null)
+                return Results.NotFound();
+
             return Results.Ok(product);
         });
 
