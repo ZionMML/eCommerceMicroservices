@@ -7,14 +7,14 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGODB_HOST": "localhost",
         "MONGODB_PORT": "27017",
-        "MONGODB_DATABASE":"OrdersDatabase",
-        "UsersMicroserviceName":"localhost",
-        "UsersMicroservicePort":"9090"
+        "MONGODB_DATABASE": "OrdersDatabase",
+        "UsersMicroserviceName": "localhost",
+        "UsersMicroservicePort": "9090"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5109",
       "launchUrl": "swagger"
-       
+
     },
     "https": {
       "commandName": "Project",
