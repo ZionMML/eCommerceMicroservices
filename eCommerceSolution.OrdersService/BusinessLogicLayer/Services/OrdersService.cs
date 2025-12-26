@@ -16,7 +16,8 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
     IValidator<OrderItemAddRequest> orderItemAddRequestValidator,
     IValidator<OrderUpdateRequest> orderUpdateRequestValidator,
     IValidator<OrderItemUpdateRequest> orderItemUpdateRequestValidator,
-    UsersMicroserviceClient usersMicroserviceClient
+    UsersMicroserviceClient usersMicroserviceClient,
+    ProductsMicroserviceClient productsMicroserviceClient
         ) : IOrdersService
 {
     private readonly IOrdersRepository _ordersRepository = ordersRepository;
@@ -26,6 +27,7 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
     private readonly IValidator<OrderUpdateRequest> _orderUpdateRequestValidator = orderUpdateRequestValidator;
     private readonly IValidator<OrderItemUpdateRequest> _orderItemUpdateRequestValidator = orderItemUpdateRequestValidator;
     private readonly UsersMicroserviceClient _usersMicroserviceClient = usersMicroserviceClient;
+    private readonly ProductsMicroserviceClient _productsMicroserviceClient = productsMicroserviceClient;
     public async Task<OrderResponse?> AddOrder(OrderAddRequest orderAddRequest)
     {
         ArgumentNullException.ThrowIfNull(orderAddRequest);
@@ -50,6 +52,13 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
                 string errors = string.Join(", ", orderItemAddRequestValidationResult.Errors
                     .Select(temp => temp.ErrorMessage));
                 throw new ArgumentException(errors);
+            }
+
+            //TO DO: Add logic for checking if ProductID exists in Products microservice
+            ProductDTO? product = await _productsMicroserviceClient.GetProductByProdcutID(item.ProductID);
+            if (product == null)
+            {
+                throw new ArgumentException($"Product with ID {item.ProductID} does not exist.");
             }
         }
 
@@ -167,6 +176,13 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
                 string errors = string.Join(", ", orderItemUpdateRequestValidationResult.Errors
                     .Select(temp => temp.ErrorMessage));
                 throw new ArgumentException(errors);
+            }
+
+            //TO DO: Add logic for checking if ProductID exists in Products microservice
+            ProductDTO? product = await _productsMicroserviceClient.GetProductByProdcutID(item.ProductID);
+            if (product == null)
+            {
+                throw new ArgumentException($"Product with ID {item.ProductID} does not exist.");
             }
         }
 
