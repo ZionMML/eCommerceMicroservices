@@ -41,7 +41,7 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
                 .Select(temp => temp.ErrorMessage));
             throw new ArgumentException(errors);
         }
-      
+
         List<ProductDTO> products = new List<ProductDTO>();
 
         foreach (OrderItemAddRequest item in orderAddRequest.OrderItems)
@@ -98,7 +98,7 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
         {
             foreach (OrderItemResponse orderItemResponse in orderResponse.OrderItems)
             {
-                ProductDTO? productDTO = products.Where(temp=>
+                ProductDTO? productDTO = products.Where(temp =>
                 temp.ProductID == orderItemResponse.ProductID).FirstOrDefault();
 
                 if (productDTO == null)
@@ -106,6 +106,15 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
 
                 _mapper.Map<ProductDTO, OrderItemResponse>(productDTO,
                     orderItemResponse);
+            }
+        }
+
+        //TO DO: Load UserPersonName and Email from Users microservice
+        if(orderResponse!= null)
+        {
+            if (user != null)
+            {
+                _mapper.Map<UserDTO, OrderResponse>(user, orderResponse);
             }
         }
 
@@ -158,6 +167,14 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
                 _mapper.Map<ProductDTO, OrderItemResponse>(productDTO,
                     orderItemResponse);
             }
+
+            //TO DO: Load UserPersonName and Email from Users microservice
+            UserDTO? user = await _usersMicroserviceClient
+                .GetUserByUserID(orderResponse.UserID);
+            if (user != null)
+            {
+                _mapper.Map<UserDTO, OrderResponse>(user, orderResponse);
+            }
         }
 
         return orderResponse;
@@ -195,8 +212,15 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
                     orderItemResponse);
             }
 
-
+            //TO DO: Load UserPersonName and Email from Users microservice
+            UserDTO? user = await _usersMicroserviceClient
+                .GetUserByUserID(orderResponse.UserID);
+            if (user != null)
+            {
+                _mapper.Map<UserDTO, OrderResponse>(user, orderResponse);
+            }
         }
+
         return (List<OrderResponse?>)orderResponses;
     }
 
@@ -235,6 +259,14 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
                     orderItemResponse);
             }
 
+
+            //TO DO: Load UserPersonName and Email from Users microservice
+            UserDTO? user = await _usersMicroserviceClient
+                .GetUserByUserID(orderResponse.UserID);
+            if (user != null)
+            {
+                _mapper.Map<UserDTO, OrderResponse>(user, orderResponse);
+            }
 
         }
 
@@ -319,6 +351,15 @@ public class OrdersService(IOrdersRepository ordersRepository, IMapper mapper,
 
                 _mapper.Map<ProductDTO, OrderItemResponse>(productDTO,
                     orderItemResponse);
+            }
+        }
+
+        //TO DO: Load UserPersonName and Email from Users microservice
+        if (orderResponse != null)
+        {
+            if (user != null)
+            {
+                _mapper.Map<UserDTO, OrderResponse>(user, orderResponse);
             }
         }
 
