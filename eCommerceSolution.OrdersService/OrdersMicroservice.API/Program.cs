@@ -44,7 +44,13 @@ builder.Services.AddHttpClient<UsersMicroserviceClient>(client =>
 {
     var policies = serviceProvider.GetRequiredService<IUsersMicroservicePolicies>();
     return policies.GetRetryPolicy();
+})
+.AddPolicyHandler((serviceProvider, request) =>
+{
+    var policies = serviceProvider.GetRequiredService<IUsersMicroservicePolicies>();
+    return policies.GetCircuitBreakerPolicy();
 });
+
 
 builder.Services.AddHttpClient<ProductsMicroserviceClient>(client =>
 {
