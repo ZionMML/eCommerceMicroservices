@@ -13,7 +13,7 @@ public class UsersMicroservicePolicies(ILogger<UsersMicroservicePolicies> logger
         AsyncRetryPolicy<HttpResponseMessage> policy =
         Polly.Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
          .WaitAndRetryAsync(retryCount: 3, sleepDurationProvider: retryAttempt =>
-             TimeSpan.FromSeconds(2),
+             TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
              onRetry: (outcome, timespan, retryAttempt, context) =>
              {
                  _logger.LogWarning($"Delaying for {timespan.TotalSeconds} seconds, " +
