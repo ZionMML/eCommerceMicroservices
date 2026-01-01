@@ -50,6 +50,11 @@ builder.Services.AddHttpClient<UsersMicroserviceClient>(client =>
 {
     var policies = serviceProvider.GetRequiredService<IUsersMicroservicePolicies>();
     return policies.GetCircuitBreakerPolicy();
+})
+.AddPolicyHandler((serviceProvider, request) =>
+{
+    var policies = serviceProvider.GetRequiredService<IUsersMicroservicePolicies>();
+    return policies.GetTimeoutPolicy();
 });
 
 
