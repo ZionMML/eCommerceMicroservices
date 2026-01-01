@@ -1,14 +1,19 @@
 ﻿using eCommerce.UsersMicroservice.BusinessLogicLayer.DTOs;
+using Microsoft.Extensions.Logging;
+using Polly.Bulkhead;
 using System.Net.Http.Json;
 
 namespace eCommerce.UsersMicroservice.BusinessLogicLayer.HttpClients;
 
-public class ProductsMicroserviceClient(HttpClient httpClient)
+public class ProductsMicroserviceClient(HttpClient httpClient,
+    Logger<ProductsMicroserviceClient> logger)
 {
     private readonly HttpClient _httpClient = httpClient;
+    private readonly Logger<ProductsMicroserviceClient> _logger = logger;
 
     public async Task<ProductDTO?> GetProductByProdcutID(Guid productID)
     {
+        try {
         var response = await _httpClient.
             GetAsync($"/api/products/search/product-id/{productID}");
 
@@ -38,5 +43,20 @@ public class ProductsMicroserviceClient(HttpClient httpClient)
         }
 
         return product;
+        }
+        catch (BulkheadRejectedException ex)
+        {
+            _logger.LogError("Bulkhead Isolation limit reached, returning null. " +
+                "Exception: {Exception}", ex);
+
+            return new ProductDTO
+            (
+                ProductID : Guid.Empty,
+                ProductName : "Temporarily Unavailable (bulkhead isolation)",
+                Category : "Temporarily Unavailable (bulkhead isolation)",
+                UnitPrice : 0.0,
+                QuantityInStock : 0
+            );
+        }
     }
 }

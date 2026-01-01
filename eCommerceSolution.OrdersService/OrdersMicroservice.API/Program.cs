@@ -68,6 +68,11 @@ builder.Services.AddHttpClient<ProductsMicroserviceClient>(client =>
 {
     var policies = serviceProvider.GetRequiredService<IProductsMicroservicePolicies>();
     return policies.GetFallbackPolicy();
+})
+.AddPolicyHandler((serviceProvider, request) =>
+{
+    var policies = serviceProvider.GetRequiredService<IProductsMicroservicePolicies>();
+    return policies.GetBulkheadIsolationPolicy();
 });
 
 var app = builder.Build();

@@ -1,6 +1,7 @@
 ﻿using eCommerce.UsersMicroservice.BusinessLogicLayer.DTOs;
 using Microsoft.Extensions.Logging;
 using Polly;
+using Polly.Bulkhead;
 using Polly.Fallback;
 
 namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.Policies;
@@ -36,6 +37,20 @@ public class ProductsMicroservicePolicies(ILogger<ProductsMicroservicePolicies> 
 
                  return response;
              });
+
+        return policy;
+    }
+    public IAsyncPolicy<HttpResponseMessage> GetBulkheadIsolationPolicy()
+    {
+        AsyncBulkheadPolicy<HttpResponseMessage> policy = Policy.BulkheadAsync<HttpResponseMessage>(
+            maxParallelization: 2, // number of concurrent executions
+            maxQueuingActions: 20, // number of actions that can be queued
+            onBulkheadRejectedAsync: context =>
+            {
+                _logger.LogWarning("Bulkhead Isolation limit reached. " +
+                    "The request has been rejected.");
+                throw new BulkheadRejectedException("Bulkhead Isolation limit reached.");
+            });
 
         return policy;
     }
