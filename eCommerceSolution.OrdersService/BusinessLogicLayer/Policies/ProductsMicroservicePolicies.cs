@@ -27,7 +27,7 @@ public class ProductsMicroservicePolicies(ILogger<ProductsMicroservicePolicies> 
                         0
                  );
 
-                 var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+                 var response = new HttpResponseMessage(System.Net.HttpStatusCode.ServiceUnavailable)
                  {
                      Content = new StringContent(
                          System.Text.Json.JsonSerializer.Serialize(product),
