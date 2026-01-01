@@ -52,4 +52,12 @@ public class UsersMicroservicePolicies(ILogger<UsersMicroservicePolicies> logger
 
         return policy;
     }
+
+    public IAsyncPolicy<HttpResponseMessage> GetCombiedPolicy()
+    {
+        var retryPolicy = GetRetryPolicy();
+        var circuitBreakerPolicy = GetCircuitBreakerPolicy();
+        var timeoutPolicy = GetTimeoutPolicy();
+        return Policy.WrapAsync(retryPolicy, circuitBreakerPolicy, timeoutPolicy);
+    }
 }

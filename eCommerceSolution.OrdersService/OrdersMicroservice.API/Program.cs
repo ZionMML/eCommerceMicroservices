@@ -41,7 +41,7 @@ builder.Services.AddHttpClient<UsersMicroserviceClient>(client =>
         $"{builder.Configuration["UsersMicroserviceName"]}:" +
         $"{builder.Configuration["UsersMicroservicePort"]}");
 })
-.AddPolicyHandler((serviceProvider, request) =>
+/*.AddPolicyHandler((serviceProvider, request) =>
 {
     var policies = serviceProvider.GetRequiredService<IUsersMicroservicePolicies>();
     return policies.GetRetryPolicy();
@@ -55,6 +55,12 @@ builder.Services.AddHttpClient<UsersMicroserviceClient>(client =>
 {
     var policies = serviceProvider.GetRequiredService<IUsersMicroservicePolicies>();
     return policies.GetTimeoutPolicy();
+});
+*/
+.AddPolicyHandler((serviceProvider, request) =>
+{
+    var policies = serviceProvider.GetRequiredService<IUsersMicroservicePolicies>();
+    return policies.GetCombiedPolicy();
 });
 
 
