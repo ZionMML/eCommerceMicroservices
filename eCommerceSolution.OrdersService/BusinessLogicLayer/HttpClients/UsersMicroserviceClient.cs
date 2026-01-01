@@ -6,10 +6,10 @@ using System.Net.Http.Json;
 
 namespace eCommerce.UsersMicroservice.BusinessLogicLayer.HttpClients;
 
-public class UsersMicroserviceClient(HttpClient httpClient, Logger<UsersMicroserviceClient> logger)
+public class UsersMicroserviceClient(HttpClient httpClient, ILogger<UsersMicroserviceClient> logger)
 {
     private readonly HttpClient _httpClient = httpClient;
-    private readonly Logger<UsersMicroserviceClient> _logger = logger;
+    private readonly ILogger<UsersMicroserviceClient> _logger = logger;
 
     public async Task<UserDTO?> GetUserByUserID(Guid userID)
     {
