@@ -60,6 +60,17 @@ public class ProductsMicroserviceClient(HttpClient httpClient,
                 throw new ArgumentException("Invalid Product ID");
             }
 
+            string productJson =
+                JsonSerializer.Serialize(product);
+
+            var cacheOptions = new DistributedCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromSeconds(300))
+                .SetSlidingExpiration(TimeSpan.FromSeconds(100));
+
+            string cacheKey = $"product:{product.ProductID}";
+
+            await _cache.SetStringAsync(cacheKey, productJson, cacheOptions);
+
             return product;
         }
         catch (BulkheadRejectedException ex)
