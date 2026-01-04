@@ -101,6 +101,27 @@ services:
     networks:
      - ecommerce-network
   
+  apigateway:
+    image: apigateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    # environment:
+    #  - ASPNETCORE_ENVIRONMENT=Development
+    #  - OrdersMicroserviceName=ordersmicroservice.api
+    #  - OrdersMicroservicePort=7000
+    #  - ProductsMicroserviceName=products-microservice
+    #  - ProductsMicroservicePort=6001
+    #  - UsersMicroserviceName=users-microservice
+    #  - UsersMicroservicePort=5000
+    ports:
+     - "4000:8080"
+    networks:
+     - ecommerce-network
+    # depends_on:
+    #  - ordersmicroservice.api
+    #  - products-microservice
+    #  - users-microservice    
 
 networks:
   orders-mongodb-network:
