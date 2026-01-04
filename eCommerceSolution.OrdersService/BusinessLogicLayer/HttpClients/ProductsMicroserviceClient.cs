@@ -33,7 +33,7 @@ public class ProductsMicroserviceClient(HttpClient httpClient,
             }
 
             var response = await _httpClient.
-            GetAsync($"/api/products/search/product-id/{productID}");
+            GetAsync($"/gateway/products/search/product-id/{productID}");
 
             if (!response.IsSuccessStatusCode)
             {

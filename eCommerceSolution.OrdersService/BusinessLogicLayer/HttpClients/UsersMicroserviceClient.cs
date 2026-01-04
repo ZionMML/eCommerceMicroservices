@@ -31,7 +31,7 @@ public class UsersMicroserviceClient(HttpClient httpClient,
                     return cachedUserDTO;
             }
 
-            var response = await _httpClient.GetAsync($"/api/users/{userID}");
+            var response = await _httpClient.GetAsync($"/gateway/users/{userID}");
 
             if (!response.IsSuccessStatusCode)
             {
