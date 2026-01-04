@@ -1,3 +1,19 @@
 {
-
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/gateway/Orders",
+      "DownstreamPathTemplate": "/api/Orders",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordersmicroservice.api", //Container service name
+          "Port": 8080
+        }
+      ],
+      "UpstreamHttpMethod": [ "Get", "Post", "Options" ],
+      "UpstreamScheme": "http"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https//localhost:5000"
+  }
 }
