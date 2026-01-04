@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/gateway/Orders",
+      "UpstreamPathTemplate": "/gateway/Orders/",
       "DownstreamPathTemplate": "/api/Orders",
       "DownstreamHostAndPorts": [
         {
@@ -14,7 +14,7 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/Orders/search/orderid/{orderID}",
+      "UpstreamPathTemplate": "/gateway/Orders/search/orderid/{orderID}/",
       "DownstreamPathTemplate": "/api/Orders/search/orderid/{orderID}",
       "DownstreamHostAndPorts": [
         {
@@ -27,7 +27,7 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/Orders/search/productid/{productID}",
+      "UpstreamPathTemplate": "/gateway/Orders/search/productid/{productID}/",
       "DownstreamPathTemplate": "/api/Orders/search/productid/{productID}",
       "DownstreamHostAndPorts": [
         {
@@ -40,7 +40,7 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/Orders/search/orderDate/{orderDate}",
+      "UpstreamPathTemplate": "/gateway/Orders/search/orderDate/{orderDate}/",
       "DownstreamPathTemplate": "/api/Orders/search/orderDate/{orderDate}",
       "DownstreamHostAndPorts": [
         {
@@ -53,7 +53,7 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/Orders/search/userid/{userID}",
+      "UpstreamPathTemplate": "/gateway/Orders/search/userid/{userID}/",
       "DownstreamPathTemplate": "/api/Orders/search/userid/{userID}",
       "DownstreamHostAndPorts": [
         {
@@ -66,7 +66,7 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/Orders/{orderID}",
+      "UpstreamPathTemplate": "/gateway/Orders/{orderID}/",
       "DownstreamPathTemplate": "/api/Orders/{orderID}",
       "DownstreamHostAndPorts": [
         {
@@ -79,7 +79,7 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/Products",
+      "UpstreamPathTemplate": "/gateway/Products/",
       "DownstreamPathTemplate": "/api/Products",
       "DownstreamHostAndPorts": [
         {
@@ -92,7 +92,7 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/Products/{productID}",
+      "UpstreamPathTemplate": "/gateway/Products/{productID}/",
       "DownstreamPathTemplate": "/api/Products/{productID}",
       "DownstreamHostAndPorts": [
         {
@@ -105,7 +105,7 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/Products/search/product-id/{productID}",
+      "UpstreamPathTemplate": "/gateway/Products/search/product-id/{productID}/",
       "DownstreamPathTemplate": "/api/Products/search/product-id/{productID}",
       "DownstreamHostAndPorts": [
         {
@@ -118,8 +118,8 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/Products/search/{seachString}",
-      "DownstreamPathTemplate": "/api/Products/search/{seachString}",
+      "UpstreamPathTemplate": "/gateway/Products/search/{searchString}/",
+      "DownstreamPathTemplate": "/api/Products/search/{searchString}",
       "DownstreamHostAndPorts": [
         {
           "Host": "products-microservice", //Container service name
@@ -131,8 +131,8 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/users/Auth/register",
-      "DownstreamPathTemplate": "/api/users/Auth/register",
+      "UpstreamPathTemplate": "/gateway/users/Auth/register/",
+      "DownstreamPathTemplate": "/api/Auth/register",
       "DownstreamHostAndPorts": [
         {
           "Host": "users-microservice", //Container service name
@@ -144,8 +144,8 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/users/Auth/login",
-      "DownstreamPathTemplate": "/api/users/Auth/login",
+      "UpstreamPathTemplate": "/gateway/users/Auth/login/",
+      "DownstreamPathTemplate": "/api/Auth/login",
       "DownstreamHostAndPorts": [
         {
           "Host": "users-microservice", //Container service name
@@ -157,7 +157,7 @@
     },
 
     {
-      "UpstreamPathTemplate": "/gateway/users/{userID}",
+      "UpstreamPathTemplate": "/gateway/users/{userID}/",
       "DownstreamPathTemplate": "/api/users/{userID}",
       "DownstreamHostAndPorts": [
         {
