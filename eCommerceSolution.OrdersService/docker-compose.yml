@@ -15,6 +15,10 @@ services:
      - ProductsMicroservicePort=8080
      - REDIS_HOST=redis
      - REDIS_PORT=6379
+     - RABBITMQ_HostName=rabbitmq
+     - RABBITMQ_UserName=user
+     - RABBITMQ_Password=password
+     - RABBITMQ_PORT=5672
     ports:
      - "7000:8080"
     networks:
@@ -42,6 +46,10 @@ services:
      - MYSQL_DATABASE=ecommerceproductsdatabase
      - MYSQL_USER=root
      - MYSQL_PASSWORD=admin
+     - RABBITMQ_HostName=rabbitmq
+     - RABBITMQ_UserName=user
+     - RABBITMQ_Password=password
+     - RABBITMQ_PORT=5672
     ports:
      - "6001:8080"
     networks:
@@ -122,6 +130,17 @@ services:
     #  - ordersmicroservice.api
     #  - products-microservice
     #  - users-microservice    
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+     - "5672:5672"
+     - "15672:15672"
+    environment:
+     - RABBITMQ_DEFAULT_USER=user
+     - RABBITMQ_DEFAULT_PASS=password
+    networks:
+     - ecommerce-network
 
 networks:
   orders-mongodb-network:
