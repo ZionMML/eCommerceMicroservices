@@ -3,6 +3,6 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
 {
     public interface IRabbitMQPublisher
     {
-        void Publish<T>(string routingKey, T message);
+        Task Publish<T>(string routingKey, T message);
     }
 }

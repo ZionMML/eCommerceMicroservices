@@ -15,6 +15,8 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
         public RabbitMQPublisher(IConfiguration configuration)
         {
             _configuration = configuration;
+
+            InitializeRabbitMQAsync().GetAwaiter().GetResult();
         }
 
         public async Task InitializeRabbitMQAsync()
@@ -36,12 +38,25 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
             string messageJson = JsonSerializer.Serialize(message);
             byte[] messageBodyInBytes = Encoding.UTF8.GetBytes(messageJson);
 
-            string exchangeName = "products.exchange";
+            string exchangeName = _configuration["RabbitMQ_Products_Exchange"]!;
+            string queueName = _configuration["RabbitMQ_Products_Queue"]!;
 
             //Create exchange
             await _channel.ExchangeDeclareAsync(exchange: exchangeName,
                 type: ExchangeType.Direct,
                 durable: true);
+
+            //Create queue
+            //await _channel.QueueDeclareAsync(queue: queueName,
+            //    durable: true,
+            //    exclusive: false,
+            //    autoDelete: false,
+            //    arguments: null);
+
+            //Bind queue to exchange
+            //await _channel.QueueBindAsync(queue: queueName,
+            //    exchange: exchangeName,
+            //    routingKey: routingKey);
 
             var properties = new BasicProperties
             {
@@ -60,8 +75,8 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
 
         public void Dispose()
         {
-            _channel.Dispose();
-            _connection.Dispose();
+            _channel?.Dispose();
+            _connection?.Dispose();
         }   
     }
 }
