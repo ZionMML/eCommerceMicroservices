@@ -1,18 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 
-namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
+namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.RabbitMQ
 {
-    public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
+    public class RabbitMQProductNameUpdateConsumer : IDisposable, IRabbitMQProductNameUpdateConsumer
     {
         private readonly IConfiguration _configuration;
         private IConnection _connection;
         private IChannel _channel;
 
-        public RabbitMQPublisher(IConfiguration configuration)
+        public RabbitMQProductNameUpdateConsumer(IConfiguration configuration)
         {
             _configuration = configuration;
 
@@ -33,10 +32,9 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
 
             _channel = await _connection.CreateChannelAsync();
         }
-        public async Task Publish<T>(string routingKey, T message)
+        public async Task Consume()
         {
-            string messageJson = JsonSerializer.Serialize(message);
-            byte[] messageBodyInBytes = Encoding.UTF8.GetBytes(messageJson);
+            string routingKey = "product.update.name";
 
             string exchangeName = _configuration["RabbitMQ_Products_Exchange"]!;
             string queueName = _configuration["RabbitMQ_Products_Queue"]!;
@@ -46,25 +44,30 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
                 type: ExchangeType.Direct,
                 durable: true);
 
+            //Create queue
+            await _channel.QueueDeclareAsync(queue: queueName,
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
+
+            //Bind queue to exchange
+            await _channel.QueueBindAsync(queue: queueName,
+                exchange: exchangeName,
+                routingKey: routingKey);
+
             var properties = new BasicProperties
             {
                 ContentType = "application/json",
                 DeliveryMode = (DeliveryModes)2 // Persistent
             };
 
-            //Publish message
-            await _channel.BasicPublishAsync(
-                exchange: exchangeName,
-                routingKey: routingKey,
-                mandatory: false,
-                basicProperties: properties, 
-                body: messageBodyInBytes);
         }
 
         public void Dispose()
         {
             _channel?.Dispose();
             _connection?.Dispose();
-        }   
+        }
     }
 }

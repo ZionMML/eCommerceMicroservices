@@ -20,7 +20,7 @@ services:
      - RABBITMQ_Password=password
      - RABBITMQ_PORT=5672
      - RabbitMQ_Products_Exchange=products.exchange
-     - RabbitMQ_Products_Queue=products.queue
+     - RabbitMQ_Products_Queue=orders.product.update.name.queue
     ports:
      - "7000:8080"
     networks:
