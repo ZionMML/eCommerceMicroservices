@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
@@ -10,10 +12,13 @@ namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.RabbitMQ
         private readonly IConfiguration _configuration;
         private IConnection _connection;
         private IChannel _channel;
+        private readonly ILogger<RabbitMQProductNameUpdateConsumer> _logger;
 
-        public RabbitMQProductNameUpdateConsumer(IConfiguration configuration)
+        public RabbitMQProductNameUpdateConsumer(IConfiguration configuration,
+            ILogger<RabbitMQProductNameUpdateConsumer> logger)
         {
             _configuration = configuration;
+            _logger = logger;
 
             InitializeRabbitMQAsync().GetAwaiter().GetResult();
         }
@@ -56,11 +61,24 @@ namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.RabbitMQ
                 exchange: exchangeName,
                 routingKey: routingKey);
 
-            var properties = new BasicProperties
+            AsyncEventingBasicConsumer consumer = new(_channel);
+
+            consumer.ReceivedAsync += async (sender, eventArgs) =>
             {
-                ContentType = "application/json",
-                DeliveryMode = (DeliveryModes)2 // Persistent
+                byte[] body = eventArgs.Body.ToArray();
+                string message = Encoding.UTF8.GetString(body);
+
+              ProductNameUpdateMessage? productNameUpdateMessage =
+                JsonSerializer.Deserialize<ProductNameUpdateMessage>(message);
+                
+                _logger.LogInformation($"Product name updated: {productNameUpdateMessage.ProductID}," +
+                    $"New product name:{productNameUpdateMessage.NewProductName}",
+                    message);
             };
+
+            await _channel.BasicConsumeAsync(queue: queueName,
+                autoAck: true,
+                consumer: consumer);
 
         }
 
