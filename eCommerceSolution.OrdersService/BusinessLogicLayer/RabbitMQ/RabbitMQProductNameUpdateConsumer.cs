@@ -68,12 +68,16 @@ namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.RabbitMQ
                 byte[] body = eventArgs.Body.ToArray();
                 string message = Encoding.UTF8.GetString(body);
 
-              ProductNameUpdateMessage? productNameUpdateMessage =
-                JsonSerializer.Deserialize<ProductNameUpdateMessage>(message);
-                
-                _logger.LogInformation($"Product name updated: {productNameUpdateMessage.ProductID}," +
-                    $"New product name:{productNameUpdateMessage.NewProductName}",
-                    message);
+                ProductNameUpdateMessage? productNameUpdateMessage =
+                  JsonSerializer.Deserialize<ProductNameUpdateMessage>(message);
+
+                if (productNameUpdateMessage != null)
+                {
+                    _logger.LogInformation($"Product name updated: {productNameUpdateMessage.ProductID}," +
+                     $"New product name:{productNameUpdateMessage.NewProductName}",
+                     message);
+                }
+
             };
 
             await _channel.BasicConsumeAsync(queue: queueName,

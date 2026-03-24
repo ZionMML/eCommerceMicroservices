@@ -73,6 +73,20 @@ internal class ProductsService : IProductsService
 
         // Attempt to delete product
         bool isDeleted = await _productsRepository.DeleteProduct(productId);
+
+        // Posting a message to the message queue that announces the consumers
+        // about the deleted product details
+
+        // Publish message of product.delete
+        if (isDeleted)
+        {
+            ProductDeletionMessage message = new(existingProdduct.ProductID, 
+                existingProdduct.ProductName);
+            string routingKey = "product.delete";
+
+            await
+           _rabbitMQPublisher.Publish(routingKey, message);
+        }
         return isDeleted;
     }
 
