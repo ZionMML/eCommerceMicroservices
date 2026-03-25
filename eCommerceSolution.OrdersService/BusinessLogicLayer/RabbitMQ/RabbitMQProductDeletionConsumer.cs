@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using eCommerce.UsersMicroservice.BusinessLogicLayer.DTOs;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -7,21 +9,24 @@ using System.Text.Json;
 
 namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.RabbitMQ;
 
-public class RabbitMQProductDeletionConsumer : IDisposable, 
+public class RabbitMQProductDeletionConsumer : IDisposable,
     IRabbitMQProductDeletionConsumer
 {
     private readonly IConfiguration _configuration;
     private IConnection _connection;
     private IChannel _channel;
     private readonly ILogger<RabbitMQProductDeletionConsumer> _logger;
+    private readonly IDistributedCache _cache;
 
     public RabbitMQProductDeletionConsumer(IConfiguration configuration,
-        ILogger<RabbitMQProductDeletionConsumer> logger)
+        ILogger<RabbitMQProductDeletionConsumer> logger,
+        IDistributedCache cache)
     {
         _configuration = configuration;
         _logger = logger;
 
         InitializeRabbitMQAsync().GetAwaiter().GetResult();
+        _cache = cache;
     }
 
     public async Task InitializeRabbitMQAsync()
@@ -76,6 +81,8 @@ public class RabbitMQProductDeletionConsumer : IDisposable,
             {
                 _logger.LogInformation($"Product deleted: {productDeletionMessage.ProductID}," +
                 $"Deleted product name:{productDeletionMessage.ProductName}");
+
+                await HandleProductDelete(productDeletionMessage.ProductID);
             }
 
 
@@ -87,6 +94,12 @@ public class RabbitMQProductDeletionConsumer : IDisposable,
 
     }
 
+    private async Task HandleProductDelete(Guid productID)
+    {  
+        string cacheKey = $"product:{productID}";
+
+        await _cache.RemoveAsync(cacheKey);
+    }
     public void Dispose()
     {
         _channel?.Dispose();

@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Amazon.Runtime.Internal.Util;
+using eCommerce.UsersMicroservice.BusinessLogicLayer.DTOs;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -13,14 +16,17 @@ namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.RabbitMQ
         private IConnection _connection;
         private IChannel _channel;
         private readonly ILogger<RabbitMQProductNameUpdateConsumer> _logger;
+        private readonly IDistributedCache _cache;
 
         public RabbitMQProductNameUpdateConsumer(IConfiguration configuration,
-            ILogger<RabbitMQProductNameUpdateConsumer> logger)
+            ILogger<RabbitMQProductNameUpdateConsumer> logger,
+            IDistributedCache cache)
         {
             _configuration = configuration;
             _logger = logger;
 
             InitializeRabbitMQAsync().GetAwaiter().GetResult();
+            _cache = cache;
         }
 
         public async Task InitializeRabbitMQAsync()
@@ -68,14 +74,13 @@ namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.RabbitMQ
                 byte[] body = eventArgs.Body.ToArray();
                 string message = Encoding.UTF8.GetString(body);
 
-                ProductNameUpdateMessage? productNameUpdateMessage =
-                  JsonSerializer.Deserialize<ProductNameUpdateMessage>(message);
+                ProductDTO? productDTO =
+                  JsonSerializer.Deserialize<ProductDTO>(message);
 
-                if (productNameUpdateMessage != null)
+                if (productDTO != null)
                 {
-                    _logger.LogInformation($"Product name updated: {productNameUpdateMessage.ProductID}," +
-                     $"New product name:{productNameUpdateMessage.NewProductName}",
-                     message);
+                    // TO DO: Update product cache
+                   await HandleProductUpdate(productDTO);
                 }
 
             };
@@ -84,6 +89,22 @@ namespace eCommerce.OrdersMicroservice.BusinessLogicLayer.RabbitMQ
                 autoAck: true,
                 consumer: consumer);
 
+        }
+
+        private async Task HandleProductUpdate(ProductDTO productDTO)
+        {
+            _logger.LogInformation($"Product name updated: {productDTO.ProductID}," +
+                    $"New product name:{productDTO.ProductName}");
+
+            string productJson =
+               JsonSerializer.Serialize(productDTO);
+
+            var cacheOptions = new DistributedCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromSeconds(300));
+
+            string cacheKey = $"product:{productDTO.ProductID}";
+
+            await _cache.SetStringAsync(cacheKey, productJson, cacheOptions);
         }
 
         public void Dispose()

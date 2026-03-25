@@ -80,7 +80,7 @@ internal class ProductsService : IProductsService
         // Publish message of product.delete
         if (isDeleted)
         {
-            ProductDeletionMessage message = new(existingProdduct.ProductID, 
+            ProductDeletionMessage message = new(existingProdduct.ProductID,
                 existingProdduct.ProductName);
             string routingKey = "product.delete";
 
@@ -129,10 +129,11 @@ internal class ProductsService : IProductsService
 
     public async Task<ProductResponse?> UpdateProduct(ProductUpdateRequest productUpdateRequest)
     {
-       Product? existingProduct = await _productsRepository.GetProductByCondition(temp =>
-            temp.ProductID == productUpdateRequest.ProductID);  
+        Product? existingProduct = await _productsRepository.GetProductByCondition(temp =>
+             temp.ProductID == productUpdateRequest.ProductID);
 
-        if(existingProduct is null){
+        if (existingProduct is null)
+        {
             throw new ArgumentException("Invalid Product ID");
         }
 
@@ -151,20 +152,13 @@ internal class ProductsService : IProductsService
         Product product = _mapper.Map<Product>(productUpdateRequest); // Invokes
         //ProductionUpdateRequestToProductMappingProfile
 
-        // Check if product name is changed
-        bool isProductNameChanged = existingProduct.ProductName != product.ProductName;
-
         Product? updatedProduct = await _productsRepository.UpdateProduct(product);
 
-        if (isProductNameChanged)
-        {
-            string routingKey = "product.update.name";
-            var message = new ProductNameUpdateMessage(product.ProductID, product.ProductName);
+        string routingKey = "product.update.name";
 
-            await _rabbitMQPublisher.Publish(routingKey, message);
-        }
+        await _rabbitMQPublisher.Publish(routingKey, product);
 
-        ProductResponse? updatedProductResponse = 
+        ProductResponse? updatedProductResponse =
             _mapper.Map<ProductResponse>(updatedProduct);
 
         return updatedProductResponse;
