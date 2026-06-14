@@ -21,6 +21,11 @@ namespace eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ
 
         public async Task InitializeRabbitMQAsync()
         {
+            Console.WriteLine("Initializing RabbitMQ Publisher...");
+            Console.WriteLine($"RabbitMQ HostName: {_configuration["RabbitMQ_HostName"]}");
+            Console.WriteLine($"RabbitMQ UserName: {_configuration["RabbitMQ_UserName"]}");
+            Console.WriteLine($"RabbitMQ Port: {_configuration["RabbitMQ_Port"]}");
+
             var factory = new ConnectionFactory()
             {
                 HostName = _configuration["RabbitMQ_HostName"]!,
