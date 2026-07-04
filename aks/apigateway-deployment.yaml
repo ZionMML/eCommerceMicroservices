@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-deployment
+  namespace: ecommerce-namespace
+  labels:
+    app: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        app: apigateway
+    spec:
+      imagePullSecrets:
+        - name: acr-secret
+      containers:
+        - name: apigateway
+          image: zion82.azurecr.io/apigateway:latest
+          ports:
+            - containerPort: 8080
